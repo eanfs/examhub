@@ -11,7 +11,7 @@
 
 import { create } from 'zustand'
 import type { DashboardSnapshot } from '../types'
-import { fetchSnapshot } from '../data/mockData'
+import { fetchSnapshot } from '../data/dataSource'
 
 /** Polling cadences from the handoff (P0). */
 const HEARTBEAT_MS = 5000

@@ -191,11 +191,3 @@ export function createSnapshot(): DashboardSnapshot {
     ],
   }
 }
-
-/**
- * Mock async fetch — stands in for the real data source. Swap the body for
- * a `fetch()` / WebSocket handshake when wiring up the backend.
- */
-export function fetchSnapshot(): Promise<DashboardSnapshot> {
-  return Promise.resolve(createSnapshot())
-}
