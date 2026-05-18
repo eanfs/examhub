@@ -60,3 +60,55 @@
     transform: rotate(360deg);
   }
 }
+
+/* ---------- error screen ---------- */
+.errorScreen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: var(--d-bg);
+  color: #a6b0d4;
+}
+.errorMsg {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+.retryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 22px;
+  background: rgba(10, 21, 48, 0.7);
+  border: 1px solid rgba(94, 234, 246, 0.35);
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.retryBtn:hover {
+  border-color: rgba(94, 234, 246, 0.6);
+}
+
+/* ---------- stale-data banner ---------- */
+.staleBanner {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+  font-size: 12px;
+  font-weight: 600;
+}

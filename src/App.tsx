@@ -7,6 +7,7 @@
  */
 
 import { useEffect, useState } from 'react'
+import { AlertTriangle, RotateCw } from 'lucide-react'
 import { TitleBar } from './components/TitleBar'
 import { MetricsRing } from './components/MetricsRing'
 import { SchoolWall } from './components/SchoolWall'
@@ -43,6 +44,7 @@ export default function App() {
   const scale = useStageScale()
   const snapshot = useDashboardStore((s) => s.snapshot)
   const loading = useDashboardStore((s) => s.loading)
+  const error = useDashboardStore((s) => s.error)
   const load = useDashboardStore((s) => s.load)
   const startPolling = useDashboardStore((s) => s.startPolling)
   const stopPolling = useDashboardStore((s) => s.stopPolling)
@@ -53,7 +55,24 @@ export default function App() {
     return () => stopPolling()
   }, [load, startPolling, stopPolling])
 
-  if (loading || !snapshot) {
+  // 首次加载尚未拿到任何快照。
+  if (!snapshot) {
+    if (error && !loading) {
+      return (
+        <div className={styles.errorScreen}>
+          <AlertTriangle size={36} color="#F87171" strokeWidth={1.5} />
+          <div className={styles.errorMsg}>{error}</div>
+          <button
+            type="button"
+            className={styles.retryBtn}
+            onClick={() => void load()}
+          >
+            <RotateCw size={14} strokeWidth={1.5} />
+            重试
+          </button>
+        </div>
+      )
+    }
     return (
       <div className={styles.loading}>
         <div className={styles.spinner} />
@@ -66,6 +85,12 @@ export default function App() {
     <div className={styles.viewport}>
       <div className={styles.stage} style={{ transform: `scale(${scale})` }}>
         <div className={styles.screen}>
+          {error && (
+            <div className={styles.staleBanner}>
+              <AlertTriangle size={12} color="#F87171" strokeWidth={1.5} />
+              数据更新失败 · 显示的是最近一次结果
+            </div>
+          )}
           <TitleBar onSwitch={toggleFullscreen} onRefresh={() => void load()} />
           <MetricsRing data={snapshot.hero} />
           <SchoolWall schools={snapshot.schools} special={snapshot.special} />
