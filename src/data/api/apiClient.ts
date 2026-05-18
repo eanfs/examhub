@@ -54,7 +54,15 @@ export async function fetchSnapshotFromApi(
     throw new ApiError(`接口返回 ${res.status}`, res.status)
   }
 
-  const body = (await res.json()) as ApiStatisticsResponse
+  let body: ApiStatisticsResponse
+  try {
+    body = (await res.json()) as ApiStatisticsResponse
+  } catch (e) {
+    // 中止信号在读 body 期间触发时同样会落到这里 —— 透传，不当成格式错误。
+    if (e instanceof DOMException && e.name === 'AbortError') throw e
+    // 200 但返回的不是 JSON（如代理登录页），给出可读错误而非裸异常。
+    throw new ApiError('接口返回数据格式错误')
+  }
   if (!body.success || body.code !== 200) {
     throw new ApiError(body.msg || '接口返回失败')
   }

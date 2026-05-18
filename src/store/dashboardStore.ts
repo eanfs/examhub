@@ -34,6 +34,8 @@ interface DashboardState {
 }
 
 let heartbeatTimer: ReturnType<typeof setInterval> | null = null
+/** 当前在途请求的中止控制器；新一轮拉取会先中止上一轮。 */
+let inflight: AbortController | null = null
 
 export const useDashboardStore = create<DashboardState>((set, get) => ({
   snapshot: null,
@@ -45,13 +47,21 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   load: async () => {
     const isFirstLoad = get().snapshot === null
     if (isFirstLoad) set({ loading: true })
+    // 慢接口下两轮轮询可能并发：先中止上一轮，确保旧响应不会覆盖新响应。
+    inflight?.abort()
+    const controller = new AbortController()
+    inflight = controller
     try {
-      const snapshot = await fetchSnapshot()
+      const snapshot = await fetchSnapshot(controller.signal)
       set({ snapshot, loading: false, error: null, syncedAt: Date.now() })
     } catch (e) {
+      // 被新一轮拉取主动中止 —— 不是真正的失败，不展示错误。
+      if (e instanceof DOMException && e.name === 'AbortError') return
       const message = e instanceof Error ? e.message : '数据加载失败'
       // 轮询失败时保留上一份好数据，只记录错误；仅首次加载会真正阻塞。
       set({ loading: false, error: message })
+    } finally {
+      if (inflight === controller) inflight = null
     }
   },
 
@@ -65,6 +75,8 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   stopPolling: () => {
     if (heartbeatTimer) clearInterval(heartbeatTimer)
     heartbeatTimer = null
+    inflight?.abort()
+    inflight = null
   },
 
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
