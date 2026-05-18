@@ -1,0 +1,81 @@
+/**
+ * 接口 GET /api/kws-exam/view/statistics/view/{examId} 的原始返回类型。
+ * 这些类型只描述「线上长什么样」，不做任何语义转换 —— 转换在 adaptSnapshot 里。
+ */
+
+/** 一个场次（stage），位于某个考场内。 */
+export interface ApiClassArrange {
+  examId: string
+  stationId: string
+  batchId: string
+  classArrangeId: string
+  stageNum: number
+  classId: string
+  className: string
+  drawLotsCount: number
+  loginCount: number
+  submitPaperCount: number
+  absenceCount: number
+  /** 场次状态码，见 statusMapping.ts。 */
+  status: number
+}
+
+/** 一个批次。 */
+export interface ApiBatch {
+  id: string
+  examId: string
+  stationId: string
+  /** 1 = 正常批次，2 = 备用批次。 */
+  batchType: number
+  batchNum: number
+  batchName: string
+  arriveTime: string
+  /** 批次状态码，见 statusMapping.ts。 */
+  status: number
+  spareBatchStatus: number
+  batchNameAs: number
+  examName: string
+  stationName: string
+  /** 考场列表，每个考场是它自己场次的数组；批次无考场时为 null。 */
+  classArrangeInfoList: ApiClassArrange[][] | null
+}
+
+/** 一个考点（学校）。 */
+export interface ApiStation {
+  id: string
+  stationName: string
+  totalStudentCount: number
+  /** 缺考 */
+  absenceCount: number
+  /** 迟到 */
+  lateCount: number
+  /** 违纪 */
+  rvCount: number
+  /** 已上报 */
+  reportCount: number
+  /** 已处理 */
+  dealCount: number
+  stationBatchStatusDtos: ApiBatch[]
+}
+
+/** 接口 data 负载。 */
+export interface ApiStatisticsData {
+  studentCount: number
+  participantCount: number
+  shouldArriveCount: number
+  arrivedCount: number
+  shouldSubmitCount: number
+  submittedCount: number
+  stationCount: number
+  examStationVo: ApiStation[]
+}
+
+/** 统一响应信封。 */
+export interface ApiEnvelope<T> {
+  code: number
+  msg: string
+  success: boolean
+  data: T
+}
+
+export type ApiStatisticsResponse = ApiEnvelope<ApiStatisticsData>
