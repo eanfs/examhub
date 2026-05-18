@@ -1,28 +1,29 @@
 /**
- * Dashboard store (Zustand).
+ * Dashboard store (Zustand)。
  *
- * Holds the live snapshot plus UI state, and owns the polling simulation:
- *   - a 5s heartbeat (general refresh / sync marker)
- *   - a 2s running-session refresh that nudges 收卷 counts upward
+ * 持有大屏快照与 UI 状态，并负责轮询：每 5s 重新拉取一次接口。
+ * 数据来源由 ../data/dataSource 决定（真实接口或 mock）。
  *
- * Swap `fetchSnapshot` / the tick logic for a real WebSocket feed and the
- * components consuming this store stay unchanged.
+ * 备注：交接规范里「进行中场次每 2s 刷新收卷数」需要更轻量的接口或
+ * WebSocket 推送；当前后端只提供单个全量 REST 接口，故统一 5s 轮询。
  */
 
 import { create } from 'zustand'
 import type { DashboardSnapshot } from '../types'
 import { fetchSnapshot } from '../data/dataSource'
 
-/** Polling cadences from the handoff (P0). */
+/** 轮询心跳间隔。 */
 const HEARTBEAT_MS = 5000
-const RUNNING_REFRESH_MS = 2000
 
 interface DashboardState {
   snapshot: DashboardSnapshot | null
+  /** 仅首次加载（还没有任何快照）时为 true。 */
   loading: boolean
-  /** Wall-clock of the last successful sync. */
+  /** 最近一次拉取的错误信息；成功后清空。 */
+  error: string | null
+  /** 最近一次成功同步的时间戳。 */
   syncedAt: number | null
-  /** Whether the 特殊情况 side panel is open. */
+  /** 特殊情况侧栏是否展开。 */
   sidebarOpen: boolean
 
   load: () => Promise<void>
@@ -33,87 +34,37 @@ interface DashboardState {
 }
 
 let heartbeatTimer: ReturnType<typeof setInterval> | null = null
-let runningTimer: ReturnType<typeof setInterval> | null = null
-
-/**
- * Advance running sessions: each running session whose 收卷 (submit) trails
- * 抽签 (draw) gains a small random amount, and the global submitted-papers
- * KPI drifts toward the expected total. Returns a new snapshot (immutable).
- */
-function tickRunning(prev: DashboardSnapshot): DashboardSnapshot {
-  let advanced = false
-
-  const schools = prev.schools.map((school) => ({
-    ...school,
-    batches: school.batches.map((b) => {
-      if (b.status !== 'running') return b
-      return {
-        ...b,
-        rooms: b.rooms.map((r) => ({
-          ...r,
-          sessions: r.sessions.map((s) => {
-            if (
-              s.state !== 'running' ||
-              typeof s.submit !== 'number' ||
-              typeof s.draw !== 'number' ||
-              s.submit >= s.draw
-            ) {
-              return s
-            }
-            const step = Math.floor(Math.random() * 3) // 0-2
-            if (step === 0) return s
-            advanced = true
-            return { ...s, submit: Math.min(s.draw, s.submit + step) }
-          }),
-        })),
-      }
-    }),
-  }))
-
-  const hero = { ...prev.hero }
-  if (hero.submittedPapers < hero.expectedPapers) {
-    hero.submittedPapers = Math.min(
-      hero.expectedPapers,
-      hero.submittedPapers + Math.floor(Math.random() * 9), // 0-8
-    )
-    advanced = true
-  }
-
-  if (!advanced) return prev
-  return { ...prev, hero, schools }
-}
 
 export const useDashboardStore = create<DashboardState>((set, get) => ({
   snapshot: null,
   loading: true,
+  error: null,
   syncedAt: null,
   sidebarOpen: false,
 
   load: async () => {
-    set({ loading: true })
-    const snapshot = await fetchSnapshot()
-    set({ snapshot, loading: false, syncedAt: Date.now() })
+    const isFirstLoad = get().snapshot === null
+    if (isFirstLoad) set({ loading: true })
+    try {
+      const snapshot = await fetchSnapshot()
+      set({ snapshot, loading: false, error: null, syncedAt: Date.now() })
+    } catch (e) {
+      const message = e instanceof Error ? e.message : '数据加载失败'
+      // 轮询失败时保留上一份好数据，只记录错误；仅首次加载会真正阻塞。
+      set({ loading: false, error: message })
+    }
   },
 
   startPolling: () => {
-    if (heartbeatTimer || runningTimer) return
-
-    runningTimer = setInterval(() => {
-      const { snapshot } = get()
-      if (snapshot) set({ snapshot: tickRunning(snapshot) })
-    }, RUNNING_REFRESH_MS)
-
+    if (heartbeatTimer) return
     heartbeatTimer = setInterval(() => {
-      // A real backend would re-fetch here; the mock just marks the sync.
-      set({ syncedAt: Date.now() })
+      void get().load()
     }, HEARTBEAT_MS)
   },
 
   stopPolling: () => {
     if (heartbeatTimer) clearInterval(heartbeatTimer)
-    if (runningTimer) clearInterval(runningTimer)
     heartbeatTimer = null
-    runningTimer = null
   },
 
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
