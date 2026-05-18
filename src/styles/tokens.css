@@ -1,0 +1,353 @@
+/* ============================================================
+   ExamHub Design System — Core Tokens
+   ============================================================
+   A monitoring/command-center system for live exam invigilation.
+   Two surfaces: a light "operator" theme (admin lists, settings)
+   and a dark "command" theme (live monitoring walls).
+   ============================================================ */
+
+/* ---------- Fonts (loaded in <link> tags from Google Fonts) ----------
+   - HarmonyOS Sans (substitute: Noto Sans SC) — primary Chinese face
+   - Manrope — primary Latin face, geometric and confident
+   - JetBrains Mono — numerics, IDs, code, timers
+   - Oswald — large statistic display numerals (optional)
+   FLAG: HarmonyOS Sans is not on Google Fonts; we substitute
+   Noto Sans SC. Provide HarmonyOS Sans WOFFs if available.
+*/
+
+:root {
+  /* ---------- TYPE FAMILIES ---------- */
+  --font-sans: "Manrope", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Manrope", "Noto Sans SC", "PingFang SC", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
+  --font-numeric: "Manrope", "JetBrains Mono", sans-serif;
+
+  /* ---------- TYPE SCALE ---------- */
+  --fz-12: 12px;  --lh-12: 16px;
+  --fz-13: 13px;  --lh-13: 18px;
+  --fz-14: 14px;  --lh-14: 20px;
+  --fz-15: 15px;  --lh-15: 22px;
+  --fz-16: 16px;  --lh-16: 24px;
+  --fz-18: 18px;  --lh-18: 26px;
+  --fz-20: 20px;  --lh-20: 28px;
+  --fz-24: 24px;  --lh-24: 32px;
+  --fz-32: 32px;  --lh-32: 40px;
+  --fz-44: 44px;  --lh-44: 52px;
+  --fz-56: 56px;  --lh-56: 60px;
+  --fz-72: 72px;  --lh-72: 76px;
+
+  /* ---------- WEIGHTS ---------- */
+  --w-regular: 400;
+  --w-medium: 500;
+  --w-semibold: 600;
+  --w-bold: 700;
+  --w-extrabold: 800;
+
+  /* ---------- BRAND PRIMARY ---------- */
+  /* Cobalt — a confident, slightly cool blue. Reads "trust + control". */
+  --c-primary-50:  #EFF5FF;
+  --c-primary-100: #DBE7FE;
+  --c-primary-200: #BFD3FE;
+  --c-primary-300: #93B4FD;
+  --c-primary-400: #6088FA;
+  --c-primary-500: #3B68F6;
+  --c-primary-600: #2548EB;   /* base */
+  --c-primary-700: #1E37D8;
+  --c-primary-800: #1F30AF;
+  --c-primary-900: #1F2E89;
+  --c-primary: var(--c-primary-600);
+
+  /* ---------- SEMANTIC ---------- */
+  /* Green — proctor "all clear", exam in progress nominal */
+  --c-success-50:  #ECFDF5;
+  --c-success-100: #D1FAE5;
+  --c-success-400: #34D399;
+  --c-success-500: #10B981;
+  --c-success-600: #059669;
+  --c-success: var(--c-success-500);
+
+  /* Amber — minor anomaly (face out of frame, brief disconnect) */
+  --c-warning-50:  #FFFBEB;
+  --c-warning-100: #FEF3C7;
+  --c-warning-400: #FBBF24;
+  --c-warning-500: #F59E0B;
+  --c-warning-600: #D97706;
+  --c-warning: var(--c-warning-500);
+
+  /* Crimson — flagged: suspected cheating, hard disconnect, paused */
+  --c-danger-50:   #FEF2F2;
+  --c-danger-100:  #FEE2E2;
+  --c-danger-400:  #F87171;
+  --c-danger-500:  #EF4444;
+  --c-danger-600:  #DC2626;
+  --c-danger: var(--c-danger-500);
+
+  /* Violet — informational, secondary highlights, "AI tagged" */
+  --c-info-50:  #F5F3FF;
+  --c-info-400: #A78BFA;
+  --c-info-500: #8B5CF6;
+  --c-info-600: #7C3AED;
+  --c-info: var(--c-info-500);
+
+  /* Cyan — live stream indicators, real-time accent on dark */
+  --c-accent-400: #22D3EE;
+  --c-accent-500: #06B6D4;
+  --c-accent-600: #0891B2;
+  --c-accent: var(--c-accent-500);
+
+  /* ---------- NEUTRALS — Light surface ---------- */
+  --c-bg:       #F6F8FB;   /* app background */
+  --c-bg-soft:  #FFFFFF;   /* cards */
+  --c-bg-sunk:  #EEF2F7;   /* inputs, table headers */
+  --c-line:     #E3E8F0;   /* dividers, borders */
+  --c-line-soft:#EEF1F6;
+  --c-fg-1:     #0B1220;   /* primary text */
+  --c-fg-2:     #38465A;   /* secondary text */
+  --c-fg-3:     #6B7894;   /* tertiary, labels */
+  --c-fg-4:     #98A2B3;   /* placeholder */
+  --c-fg-inv:   #FFFFFF;
+
+  /* ---------- NEUTRALS — Dark "Command" surface ---------- */
+  --d-bg:       #03060F;   /* outer canvas — deep cosmic black */
+  --d-bg-soft:  #0A1530;   /* panels (translucent over starfield) */
+  --d-bg-sunk:  #06102A;   /* inputs */
+  --d-bg-elev:  #142046;   /* elevated card */
+  --d-line:     #1B2B5A;
+  --d-line-soft:#13204A;
+  --d-fg-1:     #E8ECFB;
+  --d-fg-2:     #A6B0D4;
+  --d-fg-3:     #6A78A8;
+  --d-fg-4:     #4B587E;
+
+  /* Translucent panel — for cards laid over the cosmic background */
+  --d-panel:    rgba(10, 21, 48, 0.55);
+  --d-panel-line: rgba(99, 130, 230, 0.18);
+
+  /* ---------- COMMAND STATUS PALETTE ----------
+     The exam-room batch statuses, lifted from the production dashboard.
+     Each has a paired bright text color + softer dot/glow color. */
+  --c-st-ended:   #5EEAF6;   /* 已结束 — batch complete */
+  --c-st-closed:  #F59E0B;   /* 已关闭 — batch closed */
+  --c-st-drawing: #E879F9;   /* 已抽签 — drawn / pending start */
+  --c-st-running: #4ADE80;   /* 进行中 — actively running */
+  --c-st-idle:    #6B7280;   /* 未开始 — not started */
+  --c-st-violation:#FB7185;  /* 违纪 — violation flagged */
+  --c-st-reported: #FBBF24;  /* 已上报 — reported but unhandled */
+  --c-st-handled:  #4ADE80;  /* 已处理 — handled */
+
+  /* Glow accents used on dark dashboards */
+  --d-glow-blue:   rgba(59, 104, 246, 0.45);
+  --d-glow-cyan:   rgba(34, 211, 238, 0.45);
+  --d-glow-red:    rgba(239, 68, 68, 0.50);
+  --d-grid-line:   rgba(99, 130, 230, 0.08);
+
+  /* ---------- RADII ---------- */
+  --r-2:  2px;
+  --r-4:  4px;
+  --r-6:  6px;
+  --r-8:  8px;
+  --r-10: 10px;
+  --r-12: 12px;
+  --r-16: 16px;
+  --r-20: 20px;
+  --r-pill: 999px;
+
+  /* ---------- SHADOWS ---------- */
+  --sh-1: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 1px rgba(15, 23, 42, 0.03);
+  --sh-2: 0 2px 4px rgba(15, 23, 42, 0.05), 0 4px 12px rgba(15, 23, 42, 0.06);
+  --sh-3: 0 8px 24px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(15, 23, 42, 0.04);
+  --sh-4: 0 16px 40px rgba(15, 23, 42, 0.12);
+  --sh-focus: 0 0 0 3px rgba(37, 72, 235, 0.20);
+  --sh-focus-danger: 0 0 0 3px rgba(239, 68, 68, 0.25);
+
+  /* Inner / pressed */
+  --sh-inset: inset 0 1px 2px rgba(15, 23, 42, 0.06);
+
+  /* Dark theme glows (instead of soft shadows) */
+  --sh-d-card:  0 1px 0 rgba(255,255,255,0.03) inset, 0 0 0 1px var(--d-line);
+  --sh-d-elev:  0 8px 32px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--d-line);
+
+  /* ---------- SPACING SCALE (4px base) ---------- */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  20px;
+  --s-6:  24px;
+  --s-8:  32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-20: 80px;
+
+  /* ---------- LAYOUT ---------- */
+  --sidebar-w: 232px;
+  --topbar-h:  56px;
+  --content-max: 1440px;
+  --gutter: 24px;
+
+  /* ---------- MOTION ---------- */
+  --ease-out: cubic-bezier(0.16, 0.84, 0.44, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 120ms;
+  --t-base: 200ms;
+  --t-slow: 360ms;
+  --t-data: 600ms;   /* for chart/number tweens */
+
+  /* ---------- Z LAYERS ---------- */
+  --z-sticky: 100;
+  --z-overlay: 500;
+  --z-modal:  900;
+  --z-toast:  1100;
+}
+
+/* ============================================================
+   SEMANTIC TYPE — apply via class or element selector
+   ============================================================ */
+
+.t-display-xl,
+h1.display {
+  font-family: var(--font-display);
+  font-weight: var(--w-extrabold);
+  font-size: var(--fz-72);
+  line-height: var(--lh-72);
+  letter-spacing: -0.025em;
+  color: var(--c-fg-1);
+}
+
+.t-display-l,
+h1 {
+  font-family: var(--font-display);
+  font-weight: var(--w-bold);
+  font-size: var(--fz-44);
+  line-height: var(--lh-44);
+  letter-spacing: -0.02em;
+  color: var(--c-fg-1);
+}
+
+.t-h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: var(--w-bold);
+  font-size: var(--fz-32);
+  line-height: var(--lh-32);
+  letter-spacing: -0.015em;
+  color: var(--c-fg-1);
+}
+
+.t-h2,
+h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--w-semibold);
+  font-size: var(--fz-24);
+  line-height: var(--lh-24);
+  letter-spacing: -0.01em;
+  color: var(--c-fg-1);
+}
+
+.t-h3,
+h4 {
+  font-family: var(--font-sans);
+  font-weight: var(--w-semibold);
+  font-size: var(--fz-20);
+  line-height: var(--lh-20);
+  color: var(--c-fg-1);
+}
+
+.t-section,
+h5 {
+  font-family: var(--font-sans);
+  font-weight: var(--w-semibold);
+  font-size: var(--fz-16);
+  line-height: var(--lh-16);
+  color: var(--c-fg-1);
+}
+
+.t-body,
+p {
+  font-family: var(--font-sans);
+  font-weight: var(--w-regular);
+  font-size: var(--fz-14);
+  line-height: var(--lh-14);
+  color: var(--c-fg-2);
+}
+
+.t-body-l {
+  font-size: var(--fz-16);
+  line-height: var(--lh-16);
+  color: var(--c-fg-2);
+}
+
+.t-caption {
+  font-family: var(--font-sans);
+  font-weight: var(--w-medium);
+  font-size: var(--fz-12);
+  line-height: var(--lh-12);
+  color: var(--c-fg-3);
+}
+
+.t-eyebrow {
+  font-family: var(--font-sans);
+  font-weight: var(--w-semibold);
+  font-size: var(--fz-12);
+  line-height: var(--lh-12);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-fg-3);
+}
+
+.t-mono {
+  font-family: var(--font-mono);
+  font-weight: var(--w-medium);
+  font-size: var(--fz-13);
+  line-height: var(--lh-13);
+  color: var(--c-fg-2);
+}
+
+/* Big stat readouts on dashboards */
+.t-stat {
+  font-family: var(--font-display);
+  font-weight: var(--w-bold);
+  font-size: var(--fz-44);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-fg-1);
+}
+
+.t-stat-xl {
+  font-family: var(--font-display);
+  font-weight: var(--w-extrabold);
+  font-size: var(--fz-72);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   DARK SURFACE OVERRIDES — apply by wrapping in .theme-dark
+   ============================================================ */
+.theme-dark {
+  --c-bg:       var(--d-bg);
+  --c-bg-soft:  var(--d-bg-soft);
+  --c-bg-sunk:  var(--d-bg-sunk);
+  --c-line:     var(--d-line);
+  --c-line-soft:var(--d-line-soft);
+  --c-fg-1:     var(--d-fg-1);
+  --c-fg-2:     var(--d-fg-2);
+  --c-fg-3:     var(--d-fg-3);
+  --c-fg-4:     var(--d-fg-4);
+  --sh-2: var(--sh-d-card);
+  --sh-3: var(--sh-d-elev);
+  background: var(--d-bg);
+  color: var(--d-fg-1);
+}
+
+/* Tabular numbers for all stats / table cells */
+.tabular,
+.t-stat,
+.t-stat-xl,
+.t-mono { font-variant-numeric: tabular-nums; }
+
+* { box-sizing: border-box; }
