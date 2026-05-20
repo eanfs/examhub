@@ -22,19 +22,23 @@
   --font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Consolas, monospace;
   --font-numeric: "Manrope", "JetBrains Mono", sans-serif;
 
-  /* ---------- TYPE SCALE ---------- */
-  --fz-12: 12px;  --lh-12: 16px;
-  --fz-13: 13px;  --lh-13: 18px;
-  --fz-14: 14px;  --lh-14: 20px;
-  --fz-15: 15px;  --lh-15: 22px;
-  --fz-16: 16px;  --lh-16: 24px;
-  --fz-18: 18px;  --lh-18: 26px;
-  --fz-20: 20px;  --lh-20: 28px;
-  --fz-24: 24px;  --lh-24: 32px;
-  --fz-32: 32px;  --lh-32: 40px;
-  --fz-44: 44px;  --lh-44: 52px;
-  --fz-56: 56px;  --lh-56: 60px;
-  --fz-72: 72px;  --lh-72: 76px;
+  /* ---------- TYPE SCALE ----------
+     字号比例尺：每级在原 12/13/14/.../72 基础上 +2px（行高同步 +2px）。
+     令牌名沿用原始数值以避免大范围改名；实际取值见下。
+     组件层另外把硬编码字号统一对齐到「设计原型值 +2」，
+     大字号（如 36 → 38、24 → 26）因此看着比 +2 像「视觉加权放大」。 */
+  --fz-12: 14px;  --lh-12: 18px;
+  --fz-13: 15px;  --lh-13: 20px;
+  --fz-14: 16px;  --lh-14: 22px;
+  --fz-15: 17px;  --lh-15: 24px;
+  --fz-16: 18px;  --lh-16: 26px;
+  --fz-18: 20px;  --lh-18: 28px;
+  --fz-20: 22px;  --lh-20: 30px;
+  --fz-24: 26px;  --lh-24: 34px;
+  --fz-32: 34px;  --lh-32: 42px;
+  --fz-44: 46px;  --lh-44: 54px;
+  --fz-56: 58px;  --lh-56: 62px;
+  --fz-72: 74px;  --lh-72: 78px;
 
   /* ---------- WEIGHTS ---------- */
   --w-regular: 400;

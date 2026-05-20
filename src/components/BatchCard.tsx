@@ -24,6 +24,7 @@ export function BatchCard({ batch, expanded, onToggle }: BatchCardProps) {
   return (
     <div
       className={styles.card}
+      data-testid="batch-card"
       data-status={batch.status}
       data-active={isActive}
       data-expanded={expanded}
@@ -63,7 +64,7 @@ export function BatchCard({ batch, expanded, onToggle }: BatchCardProps) {
       </button>
 
       {expanded && (
-        <div className={styles.body}>
+        <div className={styles.body} data-testid="batch-rooms">
           {batch.rooms.map((r, i) => (
             <ExamRoomTable key={i} room={r} />
           ))}

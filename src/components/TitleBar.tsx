@@ -1,25 +1,15 @@
 /**
  * TitleBar — the 考务可视化大屏 title bar: an angular tech frame behind
- * the title, with a 切换 button, venue selector and 刷新 button.
+ * the title, with the system clock (left), exam picker and refresh
+ * control (right).
  */
 
-import { ChevronDown, LayoutGrid, MapPin, RotateCw } from 'lucide-react'
+import { Clock } from './Clock'
+import { ExamPicker } from './ExamPicker'
+import { RefreshControl } from './RefreshControl'
 import styles from './TitleBar.module.css'
 
-interface TitleBarProps {
-  /** Current venue label shown in the selector. */
-  venue?: string
-  onSwitch?: () => void
-  onRefresh?: () => void
-  onSelectVenue?: () => void
-}
-
-export function TitleBar({
-  venue = '上海市 · 全部考点',
-  onSwitch,
-  onRefresh,
-  onSelectVenue,
-}: TitleBarProps) {
+export function TitleBar() {
   return (
     <div className={styles.bar}>
       {/* Decorative angular frame. */}
@@ -52,29 +42,13 @@ export function TitleBar({
       </svg>
 
       <div className={styles.inner}>
-        <button type="button" className={styles.ctrlBtn} onClick={onSwitch}>
-          <LayoutGrid size={14} strokeWidth={1.5} />
-          切换
-        </button>
+        <Clock />
 
         <h1 className={styles.title}>考务可视化大屏</h1>
 
         <div className={styles.controls}>
-          <button
-            type="button"
-            className={`${styles.ctrlBtn} ${styles.selector}`}
-            onClick={onSelectVenue}
-          >
-            <span className={styles.selectorLabel}>
-              <MapPin size={14} strokeWidth={1.5} />
-              {venue}
-            </span>
-            <ChevronDown size={14} strokeWidth={1.5} />
-          </button>
-          <button type="button" className={styles.ctrlBtn} onClick={onRefresh}>
-            <RotateCw size={14} strokeWidth={1.5} />
-            刷新
-          </button>
+          <ExamPicker />
+          <RefreshControl />
         </div>
       </div>
     </div>

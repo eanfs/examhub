@@ -28,7 +28,7 @@
   flex-shrink: 0;
 }
 .schoolName {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 700;
   color: #e2e8f0;
   line-height: 1.3;
@@ -39,11 +39,12 @@
   padding-left: 11px;
 }
 .candidates {
-  font-size: 12px;
+  font-size: 16px;
   color: #94a3b8;
   font-weight: 500;
 }
 .candidatesValue {
+  font-size: 18px;
   color: #e2e8f0;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -55,7 +56,7 @@
   display: flex;
   align-items: baseline;
   gap: 5px;
-  font-size: 12px;
+  font-size: 16px;
   color: #94a3b8;
   font-weight: 500;
   margin-bottom: 4px;
@@ -65,7 +66,7 @@
 }
 .progressDone {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 700;
   color: #5eeaf6;
   font-variant-numeric: tabular-nums;
@@ -74,7 +75,7 @@
 .progressTotal {
   color: #475569;
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 18px;
   font-weight: 600;
 }
 .progressTrack {
@@ -97,7 +98,7 @@
   display: flex;
   align-items: baseline;
   gap: 5px;
-  font-size: 11.5px;
+  font-size: 16px;
   color: #94a3b8;
 }
 .liveDot {
@@ -113,7 +114,7 @@
   color: #4ade80;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  font-size: 13px;
+  font-size: 20px;
 }
 .liveSlash {
   color: #475569;
@@ -121,7 +122,7 @@
 .liveTotal {
   color: #cbd5e1;
   font-variant-numeric: tabular-nums;
-  font-size: 12px;
+  font-size: 17px;
 }
 
 /* ---------- status counters ---------- */
@@ -136,7 +137,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11.5px;
+  font-size: 15px;
   color: #94a3b8;
   font-weight: 500;
 }
@@ -171,7 +172,7 @@
   align-items: center;
   gap: 8px;
   color: #5eeaf6;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
 }
 .activeGrid {
@@ -210,12 +211,12 @@
   flex-shrink: 0;
 }
 .stripLabel {
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 600;
   white-space: nowrap;
 }
 .stripCount {
-  font-size: 12px;
+  font-size: 17px;
   color: #e2e8f0;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -241,7 +242,7 @@
   background: rgba(3, 6, 15, 0.5);
   border: 1px solid rgba(99, 130, 230, 0.18);
   color: #cbd5e1;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 500;
   cursor: pointer;
   font-family: inherit;
@@ -256,4 +257,43 @@
   height: 4px;
   border-radius: 999px;
   flex-shrink: 0;
+}
+
+/* ---------- inline special situations ---------- */
+.special {
+  padding-left: 11px;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(99, 130, 230, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.specialHead {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.specialRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.specialItem {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 15px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+.specialNum {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: 19px;
 }

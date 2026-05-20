@@ -1,15 +1,13 @@
 /**
  * SchoolWall — the main monitoring area: a cross-school summary header
- * over a scrolling list of school rows, with the optional 特殊情况 panel.
+ * over a scrolling list of school rows. 特殊情况 counts now live inline
+ * in each SchoolRow; the header carries their cross-school totals.
  */
 
 import { useMemo } from 'react'
-import { AlertCircle } from 'lucide-react'
-import type { School, SpecialSituation, Status } from '../types'
-import { useDashboardStore } from '../store/dashboardStore'
+import type { School, Status } from '../types'
 import { AccentTitle, StatusBadge } from './StatusBadge'
 import { SchoolRow } from './SchoolRow'
-import { SpecialSituations } from './SpecialSituations'
 import styles from './SchoolWall.module.css'
 
 const LEGEND: Status[] = ['running', 'drawing', 'ended', 'closed', 'idle']
@@ -43,100 +41,79 @@ function SummaryStat({
   )
 }
 
-function WallHeader({
-  schools,
-  specialCount,
-  sidebarOpen,
-  onToggleSidebar,
-}: {
-  schools: School[]
-  specialCount: number
-  sidebarOpen: boolean
-  onToggleSidebar: () => void
-}) {
+function WallHeader({ schools }: { schools: School[] }) {
   const summary = useMemo(() => {
     let running = 0
     let drawing = 0
     let ended = 0
     let total = 0
-    schools.forEach((s) =>
+    let absent = 0
+    let late = 0
+    let violation = 0
+    schools.forEach((s) => {
       s.batches.forEach((b) => {
         total += 1
         if (b.status === 'running') running += 1
         else if (b.status === 'drawing') drawing += 1
         else if (b.status === 'ended') ended += 1
-      }),
-    )
-    return { running, drawing, ended, total }
+      })
+      absent += s.special.absent
+      late += s.special.late
+      violation += s.special.violation
+    })
+    return { running, drawing, ended, total, absent, late, violation }
   }, [schools])
 
   return (
-    <div className={styles.header}>
+    <div className={styles.header} data-testid="wall-header">
       <div className={styles.headerLeft}>
-        <AccentTitle size={14}>今日批次实况</AccentTitle>
+        <AccentTitle size={16}>今日批次实况</AccentTitle>
         <div className={styles.divider} />
         <SummaryStat label="正在进行" value={summary.running} color="#4ADE80" pulse />
         <SummaryStat label="已抽签待开" value={summary.drawing} color="#E879F9" />
         <SummaryStat label="已结束" value={summary.ended} color="#5EEAF6" />
         <SummaryStat label="今日批次" value={summary.total} color="#E2E8F0" />
+        <div className={styles.divider} />
+        <SummaryStat
+          label="缺考"
+          value={summary.absent}
+          color={summary.absent ? '#FBBF24' : '#E2E8F0'}
+        />
+        <SummaryStat
+          label="迟到"
+          value={summary.late}
+          color={summary.late ? '#FBBF24' : '#E2E8F0'}
+        />
+        <SummaryStat
+          label="违纪"
+          value={summary.violation}
+          color={summary.violation ? '#FB7185' : '#E2E8F0'}
+        />
       </div>
 
       <div className={styles.headerRight}>
         <div className={styles.legend}>
           {LEGEND.map((k) => (
-            <StatusBadge key={k} status={k} size={11} />
+            <StatusBadge key={k} status={k} size={13} />
           ))}
         </div>
-        <button
-          type="button"
-          className={styles.specialBtn}
-          data-open={sidebarOpen}
-          onClick={onToggleSidebar}
-          title={sidebarOpen ? '隐藏特殊情况' : '显示特殊情况'}
-        >
-          <AlertCircle
-            size={12}
-            color={sidebarOpen ? '#FBBF24' : '#94A3B8'}
-            strokeWidth={1.5}
-          />
-          特殊情况
-          <span className={styles.specialCount}>{specialCount}</span>
-        </button>
       </div>
     </div>
   )
 }
 
-interface SchoolWallProps {
-  schools: School[]
-  special: SpecialSituation[]
-}
-
-export function SchoolWall({ schools, special }: SchoolWallProps) {
-  const sidebarOpen = useDashboardStore((s) => s.sidebarOpen)
-  const toggleSidebar = useDashboardStore((s) => s.toggleSidebar)
-  const closeSidebar = useDashboardStore((s) => s.closeSidebar)
-
+export function SchoolWall({ schools }: { schools: School[] }) {
   return (
-    <main className={styles.main}>
+    <main className={styles.main} data-testid="school-wall">
       <div className={styles.column}>
-        <WallHeader
-          schools={schools}
-          specialCount={special.length}
-          sidebarOpen={sidebarOpen}
-          onToggleSidebar={toggleSidebar}
-        />
+        <WallHeader schools={schools} />
         <div className={styles.scroll}>
-          {schools.map((s, i) => (
-            <SchoolRow key={i} school={s} />
+          {schools.map((s) => (
+            <SchoolRow key={s.name} school={s} />
           ))}
           <div className={styles.scrollTail} />
         </div>
       </div>
-
-      {sidebarOpen && (
-        <SpecialSituations data={special} onClose={closeSidebar} />
-      )}
     </main>
   )
 }

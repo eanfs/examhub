@@ -6,12 +6,69 @@
  */
 
 import { useMemo, useState } from 'react'
-import { CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react'
-import type { School, Status } from '../types'
+import { AlertCircle, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react'
+import type { School, SpecialCounts, Status } from '../types'
 import { STATUS } from '../lib/status'
 import { BatchCard } from './BatchCard'
 import { useCountUp } from '../hooks/useCountUp'
 import styles from './SchoolRow.module.css'
+
+/* ---------- inline special situations ---------- */
+
+/** 缺考 / 迟到 → amber，违纪 → red。 */
+const SPECIAL_TONE = { amber: '#FBBF24', red: '#FB7185' } as const
+
+function SpecialBlock({ data }: { data: SpecialCounts }) {
+  const counts = [
+    { label: '缺考', value: data.absent, tone: 'amber' },
+    { label: '迟到', value: data.late, tone: 'amber' },
+    { label: '违纪', value: data.violation, tone: 'red' },
+  ] as const
+
+  return (
+    <div className={styles.special} data-testid="special-block">
+      <div className={styles.specialHead}>
+        <AlertCircle size={14} color="#94A3B8" strokeWidth={1.5} />
+        特殊情况
+      </div>
+      <div className={styles.specialRow}>
+        {counts.map((c) => (
+          <span key={c.label} className={styles.specialItem}>
+            {c.label}
+            <span
+              className={styles.specialNum}
+              style={{
+                color: c.value > 0 ? SPECIAL_TONE[c.tone] : '#475569',
+              }}
+            >
+              {c.value}
+            </span>
+          </span>
+        ))}
+      </div>
+      <div className={styles.specialRow}>
+        <span className={styles.specialItem}>
+          已上报
+          <span
+            className={styles.specialNum}
+            style={{ color: data.reported > 0 ? '#FBBF24' : '#475569' }}
+          >
+            {data.reported}
+          </span>
+        </span>
+        <span className={styles.specialItem}>
+          已处理
+          <span
+            className={styles.specialNum}
+            style={{ color: data.handled > 0 ? '#4ADE80' : '#475569' }}
+          >
+            {data.handled}
+          </span>
+        </span>
+      </div>
+    </div>
+  )
+}
 
 /* ---------- status counter ---------- */
 
@@ -64,6 +121,7 @@ function ChipMini({
     <button
       type="button"
       className={styles.chip}
+      data-testid="batch-chip"
       data-expanded={expanded}
       onClick={onClick}
     >
@@ -105,6 +163,8 @@ function GroupedStrip({
         className={styles.stripRow}
         role="button"
         tabIndex={0}
+        data-testid="grouped-strip"
+        data-kind={kind}
         onClick={onReveal}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -175,6 +235,17 @@ export function SchoolRow({ school }: { school: School }) {
   const [showEnded, setShowEnded] = useState(false)
   const [showIdle, setShowIdle] = useState(false)
 
+  // 轮询带来新数据时，active 批次集合可能变化（批次完成、新批次启动）。
+  // 用「渲染中派生状态」的官方模式：在 active 真的变了时把 open 重置回新的
+  // active 默认值，避免旧索引串到不同含义的批次。在 active 不变期间，用户的
+  // 手动展开会保留。
+  const activeKey = groups.active.join(',')
+  const [prevActiveKey, setPrevActiveKey] = useState(activeKey)
+  if (prevActiveKey !== activeKey) {
+    setPrevActiveKey(activeKey)
+    setOpen(new Set(groups.active))
+  }
+
   const toggle = (i: number) =>
     setOpen((prev) => {
       const next = new Set(prev)
@@ -223,7 +294,7 @@ export function SchoolRow({ school }: { school: School }) {
     : 'rgba(59,130,246,0.55)'
 
   return (
-    <div className={styles.row}>
+    <div className={styles.row} data-testid="school-row">
       {/* ── identity panel ─────────────────────────────── */}
       <div className={styles.identity}>
         <div className={styles.idHead}>
@@ -273,6 +344,8 @@ export function SchoolRow({ school }: { school: School }) {
             <span className={styles.liveTotal}>{submitNow.t}</span>
           </div>
         )}
+
+        <SpecialBlock data={school.special} />
 
         <div className={styles.counters}>
           {counts.running > 0 && (

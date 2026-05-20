@@ -1,26 +1,8 @@
-/* The viewport letterboxes the fixed 1920×1080 stage and centers it. */
-.viewport {
-  position: fixed;
-  inset: 0;
-  background: var(--d-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-/* Fixed design coordinate system — scaled as a whole to fit the screen,
-   so every px / hex / ms from the handoff stays pixel-exact. */
-.stage {
-  width: 1920px;
-  height: 1080px;
-  flex-shrink: 0;
-  transform-origin: center center;
-}
-
+/* Fluid command surface — fills the actual viewport, no global scaling. */
 .screen {
-  width: 100%;
-  height: 100%;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -51,7 +33,7 @@
   animation: spin 0.8s linear infinite;
 }
 .loadingText {
-  font-size: 13px;
+  font-size: 15px;
   letter-spacing: 0.08em;
 }
 
@@ -74,7 +56,7 @@
   color: #a6b0d4;
 }
 .errorMsg {
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: 0.04em;
 }
 .retryBtn {
@@ -86,7 +68,7 @@
   background: rgba(10, 21, 48, 0.7);
   border: 1px solid rgba(94, 234, 246, 0.35);
   color: #cbd5e1;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
@@ -96,10 +78,12 @@
 }
 
 /* ---------- stale-data banner ---------- */
+/* 位于标题栏下方居中，避免遮挡右上角的考试选择器 / 刷新控件。 */
 .staleBanner {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 92px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 100;
   display: flex;
   align-items: center;
@@ -109,6 +93,7 @@
   background: rgba(239, 68, 68, 0.12);
   border: 1px solid rgba(239, 68, 68, 0.4);
   color: #f87171;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
+  white-space: nowrap;
 }

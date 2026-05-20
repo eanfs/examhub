@@ -127,9 +127,8 @@ describe('adaptSnapshot', () => {
     expect(batch.rooms[0].name).toBe('-')
   })
 
-  test('特殊情况按考点映射', () => {
-    expect(adaptSnapshot(FIXTURE).special[0]).toEqual({
-      school: '上海市铁岭中学',
+  test('特殊情况内联到对应考点', () => {
+    expect(adaptSnapshot(FIXTURE).schools[0].special).toEqual({
       absent: 23,
       late: 0,
       violation: 0,

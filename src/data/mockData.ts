@@ -9,6 +9,7 @@
 import type {
   Batch,
   DashboardSnapshot,
+  ExamListItem,
   ExamRoom,
   Session,
   Status,
@@ -116,30 +117,35 @@ export function createSnapshot(): DashboardSnapshot {
       totalCandidates: 343,
       batchProgress: { done: 6, total: 10 },
       batches: makeBatches(10, 6),
+      special: { absent: 13, late: 0, violation: 0, reported: 48, handled: 0 },
     },
     {
       name: '上海市第十五中学',
       totalCandidates: 341,
       batchProgress: { done: 6, total: 10 },
       batches: makeBatches(10, 6),
+      special: { absent: 11, late: 0, violation: 0, reported: 44, handled: 0 },
     },
     {
       name: '上海市浦东初级中学',
       totalCandidates: 385,
       batchProgress: { done: 5, total: 11 },
       batches: makeBatches(11, 5),
+      special: { absent: 19, late: 0, violation: 0, reported: 76, handled: 0 },
     },
     {
       name: '复旦大学附属中学',
       totalCandidates: 424,
       batchProgress: { done: 8, total: 12 },
       batches: makeBatches(12, 8),
+      special: { absent: 22, late: 0, violation: 0, reported: 70, handled: 0 },
     },
     {
       name: '华东师范大学第二附属中学',
       totalCandidates: 472,
       batchProgress: { done: 14, total: 20 },
       batches: makeBatches(20, 14),
+      special: { absent: 15, late: 0, violation: 0, reported: 52, handled: 0 },
     },
     {
       // "全部完成" school — backups dropped, all 9 batches ended.
@@ -147,12 +153,14 @@ export function createSnapshot(): DashboardSnapshot {
       totalCandidates: 318,
       batchProgress: { done: 9, total: 9 },
       batches: makeBatches(9, 9).slice(0, 9),
+      special: { absent: 23, late: 1, violation: 0, reported: 92, handled: 1 },
     },
     {
       name: '南洋模范中学',
       totalCandidates: 366,
       batchProgress: { done: 18, total: 30 },
       batches: makeBatches(30, 18),
+      special: { absent: 33, late: 0, violation: 0, reported: 124, handled: 0 },
     },
   ]
 
@@ -175,19 +183,35 @@ export function createSnapshot(): DashboardSnapshot {
       staffCount: 60,
     },
     schools,
-    special: [
-      { school: '上海市第二中学', absent: 33, late: 0, violation: 0, reported: 124, handled: 0 },
-      { school: '上海市杨浦初级中学', absent: 16, late: 0, violation: 0, reported: 54, handled: 0 },
-      { school: '上海市惠民中学', absent: 13, late: 0, violation: 0, reported: 48, handled: 0 },
-      { school: '上海市辽阳中学', absent: 12, late: 0, violation: 0, reported: 38, handled: 0 },
-      { school: '理工大学附属中学', absent: 22, late: 0, violation: 0, reported: 70, handled: 0 },
-      { school: '上海市同济初级中学', absent: 15, late: 0, violation: 0, reported: 52, handled: 0 },
-      { school: '上海财经大学附属中学', absent: 15, late: 0, violation: 0, reported: 54, handled: 0 },
-      { school: '上海市三门中学', absent: 25, late: 0, violation: 0, reported: 100, handled: 0 },
-      { school: '上海市曹杨第二中学', absent: 23, late: 1, violation: 0, reported: 92, handled: 1 },
-      { school: '上海市格致中学', absent: 11, late: 0, violation: 0, reported: 44, handled: 0 },
-      { school: '南洋模范中学', absent: 19, late: 0, violation: 0, reported: 76, handled: 0 },
-      { school: '上海市市西中学', absent: 12, late: 0, violation: 0, reported: 48, handled: 0 },
-    ],
   }
+}
+
+/**
+ * Mock 考试列表（标题栏选择器用）。首项 id 与 createSnapshot 的
+ * exam.id 一致，使 mock 模式下选择器能正确高亮当前考试。
+ */
+export function createExamList(): ExamListItem[] {
+  return [
+    {
+      id: 'EXAM-GK-2025-MOCK-04',
+      name: '上海市 2025 年高三第二次模拟考试',
+      status: 2,
+      startDate: '2025-06-07',
+      endDate: '2025-06-09',
+    },
+    {
+      id: 'EXAM-GK-2025-MOCK-03',
+      name: '上海市 2025 年高三第一次模拟考试',
+      status: 4,
+      startDate: '2025-03-12',
+      endDate: '2025-03-14',
+    },
+    {
+      id: 'EXAM-LH-2026-MOCK-01',
+      name: '崇明区 2026 年理化实验考（模拟）',
+      status: 1,
+      startDate: '2026-05-16',
+      endDate: '2026-05-16',
+    },
+  ]
 }
