@@ -24,7 +24,7 @@ function SessionRow({ index, session }: { index: number; session: Session }) {
     <>
       <div className={styles.cellIdx}>{index}</div>
       <div className={styles.cellStatus}>
-        <StatusBadge status={session.state} size={11} />
+        <StatusBadge status={session.state} size={15} />
       </div>
       <div className={styles.cellNum}>{cellValue(session.draw)}</div>
       <div className={styles.cellNum}>{cellValue(session.login)}</div>

@@ -10,11 +10,11 @@ import styles from './StatusBadge.module.css'
 
 interface StatusBadgeProps {
   status: Status
-  /** Font size in px (also drives layout). Defaults to 12. */
+  /** Font size in px (also drives layout). Defaults to 14. */
   size?: number
 }
 
-export function StatusBadge({ status, size = 12 }: StatusBadgeProps) {
+export function StatusBadge({ status, size = 14 }: StatusBadgeProps) {
   const s = STATUS[status]
   return (
     <span className={styles.badge} style={{ fontSize: size, color: s.fg }}>
@@ -37,7 +37,7 @@ interface AccentTitleProps {
 export function AccentTitle({
   children,
   color = '#3B82F6',
-  size = 14,
+  size = 16,
 }: AccentTitleProps) {
   return (
     <div className={styles.title} style={{ fontSize: size }}>

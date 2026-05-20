@@ -35,17 +35,8 @@ export interface Batch {
   rooms: ExamRoom[]
 }
 
-/** A school / exam venue (考点). */
-export interface School {
-  name: string
-  totalCandidates: number
-  batchProgress: { done: number; total: number }
-  batches: Batch[]
-}
-
-/** One row of the 特殊情况 side panel. */
-export interface SpecialSituation {
-  school: string
+/** Per-school 特殊情况 counts, rendered inline in each school row. */
+export interface SpecialCounts {
   /** 缺考 */
   absent: number
   /** 迟到 */
@@ -56,6 +47,16 @@ export interface SpecialSituation {
   reported: number
   /** 已处理 */
   handled: number
+}
+
+/** A school / exam venue (考点). */
+export interface School {
+  name: string
+  totalCandidates: number
+  batchProgress: { done: number; total: number }
+  batches: Batch[]
+  /** 该考点的特殊情况计数（缺考 / 迟到 / 违纪 / 已上报 / 已处理）。 */
+  special: SpecialCounts
 }
 
 /** The 7 hero KPIs shown in the metric rings. */
@@ -93,5 +94,17 @@ export interface DashboardSnapshot {
   exam: ExamMeta
   hero: HeroMetrics
   schools: School[]
-  special: SpecialSituation[]
+}
+
+/** One exam in the title-bar exam picker. */
+export interface ExamListItem {
+  /** 考试 ID，作为统计接口的 examId。 */
+  id: string
+  /** 考试名称，选择器中显示。 */
+  name: string
+  /** 考试状态码（接口 examStatus，枚举未知，仅透传）。 */
+  status: number
+  /** 考试起止日期（yyyy-MM-dd）。 */
+  startDate: string
+  endDate: string
 }

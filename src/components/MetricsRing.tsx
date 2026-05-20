@@ -37,7 +37,7 @@ function MetricTile({ tile, index }: { tile: Tile; index: number }) {
   const { Icon } = tile
 
   return (
-    <div className={styles.tile}>
+    <div className={styles.tile} data-testid="metric-tile">
       <div className={styles.ring}>
         <svg className={styles.ringSvg} viewBox="0 0 64 64" aria-hidden="true">
           <defs>
@@ -104,7 +104,7 @@ export function MetricsRing({ data }: { data: HeroMetrics }) {
   ]
 
   return (
-    <div className={styles.strip}>
+    <div className={styles.strip} data-testid="metrics-ring">
       {tiles.map((t, i) => (
         <MetricTile key={t.key} tile={t} index={i} />
       ))}

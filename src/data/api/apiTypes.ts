@@ -45,16 +45,16 @@ export interface ApiStation {
   id: string
   stationName: string
   totalStudentCount: number
-  /** 缺考 */
-  absenceCount: number
-  /** 迟到 */
-  lateCount: number
-  /** 违纪 */
-  rvCount: number
-  /** 已上报 */
-  reportCount: number
-  /** 已处理 */
-  dealCount: number
+  /** 缺考；接口在未统计时返回 null。 */
+  absenceCount: number | null
+  /** 迟到；接口在未统计时返回 null。 */
+  lateCount: number | null
+  /** 违纪；接口在未统计时返回 null。 */
+  rvCount: number | null
+  /** 已上报；接口在未统计时返回 null。 */
+  reportCount: number | null
+  /** 已处理；接口在未统计时返回 null。 */
+  dealCount: number | null
   stationBatchStatusDtos: ApiBatch[]
 }
 
@@ -79,3 +79,22 @@ export interface ApiEnvelope<T> {
 }
 
 export type ApiStatisticsResponse = ApiEnvelope<ApiStatisticsData>
+
+/**
+ * 考试计划列表项，GET /kws-exam/plan/view/List 的 data 数组元素。
+ * 接口返回字段较多，这里只声明选择器实际用到的部分。
+ */
+export interface ApiExamPlan {
+  id: string
+  examName: string
+  examCode: string
+  /** 考试状态码。 */
+  examStatus: number
+  examStartDate: string
+  examEndDate: string
+  examType: number
+  /** 行级状态（启用/停用）。 */
+  status: number
+}
+
+export type ApiExamListResponse = ApiEnvelope<ApiExamPlan[]>

@@ -8,7 +8,7 @@ import type {
   DashboardSnapshot,
   ExamRoom,
   School,
-  SpecialSituation,
+  SpecialCounts,
 } from '../../types'
 import type {
   ApiBatch,
@@ -52,6 +52,17 @@ function adaptBatch(b: ApiBatch): Batch {
   }
 }
 
+/** 该考点的特殊情况计数；接口未统计时字段为 null，统一回退为 0。 */
+function adaptSpecial(st: ApiStation): SpecialCounts {
+  return {
+    absent: st.absenceCount ?? 0,
+    late: st.lateCount ?? 0,
+    violation: st.rvCount ?? 0,
+    reported: st.reportCount ?? 0,
+    handled: st.dealCount ?? 0,
+  }
+}
+
 function adaptSchool(st: ApiStation): School {
   const batches = st.stationBatchStatusDtos.map(adaptBatch)
   // 批次进度只看正常批次（batchType===1），备用批次不计。
@@ -65,17 +76,7 @@ function adaptSchool(st: ApiStation): School {
     totalCandidates: st.totalStudentCount,
     batchProgress: { done, total: normal.length || batches.length },
     batches,
-  }
-}
-
-function adaptSpecial(st: ApiStation): SpecialSituation {
-  return {
-    school: st.stationName,
-    absent: st.absenceCount,
-    late: st.lateCount,
-    violation: st.rvCount,
-    reported: st.reportCount,
-    handled: st.dealCount,
+    special: adaptSpecial(st),
   }
 }
 
@@ -102,6 +103,5 @@ export function adaptSnapshot(res: ApiStatisticsResponse): DashboardSnapshot {
       staffCount: d.participantCount,
     },
     schools: d.examStationVo.map(adaptSchool),
-    special: d.examStationVo.map(adaptSpecial),
   }
 }
