@@ -1,0 +1,18 @@
+# 服务器部署：拉取 SWR 镜像启动考务大屏。
+# 加入后端所在的外部网络，使容器内 nginx 能按服务名反代到 xde-exam-server。
+#   docker compose -f docker/docker-compose.yaml pull
+#   docker compose -f docker/docker-compose.yaml up -d
+services:
+  xde-dashboard-web:
+    image: swr.cn-east-3.myhuaweicloud.com/intetech/xde-dashboard:latest
+    container_name: xde-dashboard-web
+    restart: always
+    networks:
+      - xdc_default
+    ports:
+      - "80:80"
+
+networks:
+  # 后端默认网络（docker network ls 查看），后端服务 xde-exam-server 也在其中
+  xdc_default:
+    external: true

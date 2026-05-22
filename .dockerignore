@@ -1,0 +1,24 @@
+# 构建上下文排除项 —— 见 docker/Dockerfile
+node_modules
+dist
+dist-ssr
+
+# 本地密钥：必须排除，否则会在镜像构建时覆盖 .env.production
+.env.local
+*.local
+
+# 版本控制与日志
+.git
+.gitignore
+*.log
+
+# 测试产物
+test-results
+playwright-report
+playwright/.cache
+playwright-results.xml
+
+# 编辑器
+.vscode
+.idea
+.DS_Store

@@ -71,3 +71,26 @@ src/
 - 特殊情况侧栏：默认隐藏，顶部按钮切换，× 关闭
 - 数字滚动 600ms、卡片过渡 120ms、脉冲 1.4s，遵循 `prefers-reduced-motion`
 - `切换` 按钮进入/退出全屏；`刷新` 按钮重新拉取快照
+
+## 部署
+
+容器化部署：多阶段构建（node 编译 → nginx 运行），nginx 托管静态产物并把
+`/api` 反代到后端考务服务。
+
+| 文件 | 作用 |
+|------|------|
+| `docker/Dockerfile` | 多阶段构建：`node:22` 编译 → `nginx` 运行阶段 |
+| `docker/exam-web.conf` | nginx 站点配置，`/api` 反代到 `xde-exam-server:9088` |
+| `docker/docker-compose.yaml` | 服务器拉取 SWR 镜像启动 |
+| `.gitlab-ci.yml` | 推送 `develop` 分支 / 打 tag 时自动构建镜像并推到华为云 SWR |
+| `.env.production` | 生产构建变量（`VITE_DATA_SOURCE=api`），不含密钥 |
+
+本地构建并运行镜像：
+
+```bash
+docker build -f docker/Dockerfile -t xde-dashboard:local .
+docker run --rm -p 8080:80 xde-dashboard:local
+```
+
+GitLab CI 需在 `Settings > CI/CD > Variables` 配置 `SWR_USERNAME` /
+`SWR_PASSWORD`（华为云 SWR 登录凭证），Runner 需支持 docker-in-docker。
